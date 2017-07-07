@@ -1,6 +1,7 @@
 import React from 'react';
 import {getUsers} from 'api/RandomUsers';
 import UserCardList from './UserCardList';
+import AddUserForm from './AddUserForm';
 import {without} from 'lodash';
 
 export default class MainComponent extends React.Component {
@@ -10,10 +11,6 @@ export default class MainComponent extends React.Component {
       eventName: 'React Event',
       users: []
     }
-  }
-
-  componentWillMount() {
-    console.log('componentWillMount');
   }
 
   componentDidMount() {
@@ -30,9 +27,14 @@ export default class MainComponent extends React.Component {
   render() {
     return(
       <div>
+        <div className='row mb-3'>
+          <div className='col-lg-12'>
+            <AddUserForm />
+          </div>
+        </div>
         <div>
           <h3>
-            {this.state.users.length} people attend to {this.state.eventName}
+            {this.state.users.length} people attending to {this.state.eventName}
           </h3>
         </div>
         <UserCardList
