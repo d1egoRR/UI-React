@@ -1,10 +1,22 @@
 import React from 'react';
 
 export default class AddUserForm extends React.Component {
+  onToggleFormVisibility() {
+    this.props.handleToggleFormVisibility();
+  }
+
   render() {
+    const isFormVisible = this.props.isFormVisible;
+    const formStyle = {
+      display: isFormVisible ? 'block' : 'none'
+    };
+    const addOrMinusSign = isFormVisible ? 'fa fa-minus fa-2x' : 'fa fa-plus fa-2x';
+    const hideOrHideUserTex = isFormVisible ? 'Hide' : 'Add User';
+
     return(
       <div>
-        <div className="col-lg-12 addUserSection">
+        <i className={addOrMinusSign} onClick={::this.onToggleFormVisibility}></i> {hideOrHideUserTex}
+        <div style={formStyle} className="col-lg-12 addUserSection">
           <form >
             <div className="form-group row">
               <label htmlFor="gender" className="col-sm-2 col-form-label">Gender</label>
