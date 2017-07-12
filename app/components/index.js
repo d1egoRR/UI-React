@@ -2,7 +2,8 @@ import React from 'react';
 import {getUsers} from 'api/RandomUsers';
 import UserCardList from './UserCardList';
 import AddUserForm from './AddUserForm';
-import {without} from 'lodash';
+import GenderSortDropdown from './GenderSortDropdown';
+import {without, filter} from 'lodash';
 
 export default class MainComponent extends React.Component {
   constructor(props) {
@@ -12,7 +13,8 @@ export default class MainComponent extends React.Component {
       users: [],
       isFormVisible: false,
       selectedGender: '',
-      selectedCountry: ''
+      selectedCountry: '',
+      filterBy: 'all'
     }
   }
 
@@ -45,7 +47,19 @@ export default class MainComponent extends React.Component {
     this.setState({users});
   }
 
+  changeGenderSortDropdown(filterBy) {
+    this.setState({filterBy});
+  }
+
   render() {
+
+    let currentUsers = this.state.users;
+    const filterBy = this.state.filterBy;
+
+    if (filterBy !== 'all') {
+      currentUsers = filter(currentUsers, user=>user.gender === filterBy);
+    }
+
     return(
       <div>
         <div className='row mb-3'>
@@ -60,13 +74,28 @@ export default class MainComponent extends React.Component {
               handleAddUser={::this.addUser} />
           </div>
         </div>
-        <div>
-          <h3>
-            {this.state.users.length} people attending to {this.state.eventName}
-          </h3>
+
+        <div className='row mb-3'>
+          <div className='col-lg-6'>
+            <div className='form-inline'>
+              <div className='mr-3'>
+                <GenderSortDropdown
+                  handleGenderSortDropdownValueChange={::this.changeGenderSortDropdown}
+                  filterBy={this.state.filterBy} />
+              </div>
+            </div>
+          </div>
+          <div className='col-lg-6'>
+            <div>
+              <h3 className='float-right'>
+                {currentUsers.length} people attending to {this.state.eventName}
+              </h3>
+            </div>
+          </div>
         </div>
+
         <UserCardList
-          users={this.state.users}
+          users={currentUsers}
           handleRemoveUser={::this.removeUser}
           />
       </div>
