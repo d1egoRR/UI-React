@@ -3,6 +3,7 @@ import {getUsers} from 'api/RandomUsers';
 import UserCardList from './UserCardList';
 import AddUserForm from './AddUserForm';
 import GenderSortDropdown from './GenderSortDropdown';
+import SearchInput from './SearchInput';
 import {without, filter} from 'lodash';
 
 export default class MainComponent extends React.Component {
@@ -14,7 +15,8 @@ export default class MainComponent extends React.Component {
       isFormVisible: false,
       selectedGender: '',
       selectedCountry: '',
-      filterBy: 'all'
+      filterBy: 'all',
+      query: ''
     }
   }
 
@@ -51,10 +53,33 @@ export default class MainComponent extends React.Component {
     this.setState({filterBy});
   }
 
+  search(query) {
+    this.setState({query});
+  }
+
+  searchByQuery(users, query) {
+    const newUsers = [];
+    users.forEach(user=>{
+      if (user.name.toLowerCase().includes(query) ||
+          user.region.toLowerCase().includes(query) ||
+          user.email.toLowerCase().includes(query) ||
+          user.gender.toLowerCase().includes(query) ||
+          user.age == query)
+      {
+        newUsers.push(user);
+      }
+    });
+
+    return newUsers;
+  }
+
   render() {
 
     let currentUsers = this.state.users;
+    const query = this.state.query.toLowerCase();
     const filterBy = this.state.filterBy;
+
+    currentUsers = this.searchByQuery(currentUsers, query);
 
     if (filterBy !== 'all') {
       currentUsers = filter(currentUsers, user=>user.gender === filterBy);
@@ -83,6 +108,7 @@ export default class MainComponent extends React.Component {
                   handleGenderSortDropdownValueChange={::this.changeGenderSortDropdown}
                   filterBy={this.state.filterBy} />
               </div>
+              <SearchInput handleSearch={::this.search} />
             </div>
           </div>
           <div className='col-lg-6'>
