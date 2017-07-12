@@ -114,6 +114,9 @@ export default class MainComponent extends React.Component {
           <div className='col-lg-6'>
             <div>
               <h3 className='float-right'>
+                <span className='mr-3'>
+                  {currentUsers.length <= 0 ? <i className="em em-disappointed"/> : null}
+                </span>
                 {currentUsers.length} people attending to {this.state.eventName}
               </h3>
             </div>
